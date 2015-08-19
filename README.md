@@ -24,13 +24,15 @@ These can be chained together - `make create-hosts create-tmux attach`
 The demos can be recorded using one of the many terminal recording programs that are available. Asciinema is a very good option.
 
 In one terminal run
-
-  make clean-hosts create-tmux resize
-  asciinema rec -y -c "tmux a" -t "Calico and libnetwork" libnetwork
+```
+make clean-hosts create-tmux resize
+asciinema rec -y -c "tmux a" -t "Calico and libnetwork" libnetwork
+```
   
 Then in another run
-
-  ./libnetwork-demo.sh
+```
+./libnetwork-demo.sh
+```
 
 ### Playback of recordings
 `asciinema play libnetwork`
@@ -41,16 +43,8 @@ Then in another run
 ## Converting to gif
 See https://github.com/tomdee/asciinema2gif
 
-These instructions are based around asciinema - it provides a way to record terminal sessions and store those recordings in a machine (and human-ish) readable format.
-
-Using asciinema solves _most_ of the problem. This repo helps to solve the other parts.
-
-Ensuring a consistent terminal size is used
-Handling recordings of multiple windows
-Providing a way of scripting recordings
-Providing the recordings in multiple output formats.
-
-Before recording, run `resize -s 30 120` to set your terminal size.
+e.g.
+![Recording](http://i.imgur.com/IaYaTDE.gif)
 
 
 
