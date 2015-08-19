@@ -23,7 +23,7 @@ sleep 3
 status "Workload-A can ping containers on the same network - srvC and srvE"
 sleep 1
 send 0 "docker exec workload-A ping -c 1 srvC"
-send 0 "docker exec workload-A ping -c 1 srvE"
+send 0 "docker exec workload-A ping -c 1 libnetwork-demo.shsrvE"
 sleep 3
 
 status "But it can't ping containers on different networks - srvB and srvD"

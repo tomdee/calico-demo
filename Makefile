@@ -35,8 +35,8 @@ run-consul:
 	--name calico-consul progrium/consul \
 	-server -bootstrap-expect 1 -client $(LOCAL_IP_ENV)
 
-create-hosts: calicoctl calico-node-v0.5.3.tar busybox.tar run-consul run-etcd
-	docker rm -f calico-01 calico-02
+create-hosts-libnetwork: calicoctl calico-node-v0.5.3.tar busybox.tar run-consul run-etcd
+	-docker rm -f calico-01 calico-02
 
 	for NAME in calico-01 calico-02 ; do \
     docker run --name $$NAME -h $$NAME --privileged -v `pwd`:/code \
@@ -50,6 +50,23 @@ create-hosts: calicoctl calico-node-v0.5.3.tar busybox.tar run-consul run-etcd
 		$$TARGET ln -s /code/calicoctl /usr/local/bin ; \
 		$$TARGET calicoctl checksystem --fix ; \
 	done
+
+create-hosts: calicoctl calico-node-v0.5.3.tar busybox.tar run-etcd
+	-docker rm -f calico-01 calico-02
+
+	for NAME in calico-01 calico-02 ; do \
+    docker run --name $$NAME -h $$NAME --privileged -v `pwd`:/code \
+		-e LOG=file -e ETCD_AUTHORITY=$(LOCAL_IP_ENV):2379 \
+		-tid calico/dind:dockerrestarter ; \
+  done
+
+	for TARGET in "$(CALICO1)" "$(CALICO2)" ; do \
+		$$TARGET docker load --input /code/busybox.tar ; \
+		$$TARGET docker load --input /code/calico-node.tar ; \
+		$$TARGET ln -s /code/calicoctl /usr/local/bin ; \
+		$$TARGET calicoctl checksystem --fix ; \
+	done
+
 
 resize:
 	# Ensure the terminal is a good size
@@ -65,7 +82,7 @@ create-tmux:
 attach: resize
 	tmux a
 
-clean-hosts:
+clean-hosts-libnetwork:
 	# Ideally cleaning would be able to just remove the workloads and libnetwork would remove all the data.
 	# Unfortunately this doesn't work, so we jump through hoops to destroy all the datastores and restart docker.
 	-$(CALICO1) docker rm -f workload-A
@@ -79,3 +96,8 @@ clean-hosts:
 	make run-etcd run-consul
 	sleep 5
 
+clean-hosts:
+	-$(CALICO1) docker rm -f workload-A
+	-$(CALICO2) docker rm -f workload-B
+
+	make run-etcd
