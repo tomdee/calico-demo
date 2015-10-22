@@ -110,7 +110,7 @@ reset-hosts-libnetwork:
 	sleep 5
 
 reset-hosts:
-	-$(CALICO1) docker rm -f workload-A
-	-$(CALICO2) docker rm -f workload-B
+	-$(CALICO1) docker rm -f conA conB conC conD conE
+	-$(CALICO2) docker rm -f conA conB conC conD conE
 
 	make run-etcd
