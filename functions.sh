@@ -2,7 +2,6 @@
 TMUX_PTS=`tmux list-clients |cut -d: -f 1`
 send () {
 tmux send-keys -t $1 "$2" Enter
-sleep 1
 }
 
 type () {
@@ -21,4 +20,16 @@ tmux dislay-message -t $1 $2
 
 status () {
 tmux set -g window-status-current-format "$1"
+}
+
+banner () {
+#send $1 "toilet -F border -f pagga $2"
+send $1 "banner $2"
+}
+
+clear_all () {
+status " "
+send 0 clear
+send 1 clear
+sleep 1
 }
