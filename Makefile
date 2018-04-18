@@ -1,4 +1,4 @@
-.PHONEY: create-hosts run-etcd run-consul resize create-tmux clean-hosts attach
+.PHONY: create-hosts run-etcd run-consul resize create-tmux clean-hosts attach
 
 LOCAL_IP_ENV?=$(shell ip route get 8.8.8.8 | head -1 | cut -d' ' -f8)
 CALICO1=docker exec -ti calico-01
